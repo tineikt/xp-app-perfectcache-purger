@@ -1,0 +1,56 @@
+plugins {
+	id 'maven'
+	id 'com.enonic.xp.app' version '1.0.13'
+	id 'com.moowork.node' version '1.2.0'
+}
+
+app {
+	name = project.appName
+	displayName = project.displayName
+	vendorName = 'TINE SA'
+	vendorUrl = 'https://www.tine.no'
+}
+
+node {
+	version = '4.2.1'
+	download = true
+}
+
+dependencies {
+	compile "com.enonic.xp:core-api:${xpVersion}"
+	compile "com.enonic.xp:portal-api:${xpVersion}"
+	include "com.enonic.xp:lib-portal:${xpVersion}"
+	include "com.enonic.xp:lib-content:${xpVersion}"
+	include "com.enonic.xp:lib-event:${xpVersion}"
+	include "com.enonic.xp:lib-context:${xpVersion}"
+	include "com.enonic.xp:lib-node:${xpVersion}"
+	include 'com.enonic.lib:lib-http-client:1.0.1'
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven { url 'http://repo.enonic.com/public' }
+}
+
+task babelJs(type: NodeTask, dependsOn: 'npmInstall') {
+	script = file('node_modules/.bin/babel')
+	args = [
+	"-d",
+	"$buildDir/resources/main",
+	"-x",
+	".es6",
+	"--presets",
+	"es2015",
+	"src/main/resources"
+	]
+
+	if (project.hasProperty( 'watch' )) {
+		args = ['-w'] + args
+	}
+
+	inputs.dir 'src/main/resources'
+	outputs.dir "$buildDir/resources/main"
+}
+
+jar.dependsOn += babelJs
