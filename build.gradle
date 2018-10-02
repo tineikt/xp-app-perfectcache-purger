@@ -1,6 +1,5 @@
 plugins {
-	id 'maven'
-	id 'com.enonic.xp.app' version '1.0.13'
+	id 'com.enonic.xp.app' version '1.0.17'
 	id 'com.moowork.node' version '1.2.0'
 }
 
@@ -9,11 +8,17 @@ app {
 	displayName = project.displayName
 	vendorName = 'TINE SA'
 	vendorUrl = 'https://www.tine.no'
+	systemVersion = xpVersion
+}
+
+ext {
+  nodeVersion = "8.11.1"
+  npmVer = "5.7.1"
 }
 
 node {
-	version = '6.11.4'
-	npmVersion = '5.5.1'
+	version = nodeVersion
+	npmVersion = npmVer
 	download = true
 }
 
@@ -34,24 +39,10 @@ repositories {
 	maven { url 'http://repo.enonic.com/public' }
 }
 
-task babelJs(type: NodeTask, dependsOn: 'npmInstall') {
-	script = file('node_modules/.bin/babel')
-	args = [
-	"-d",
-	"$buildDir/resources/main",
-	"-x",
-	".es6",
-	"--presets",
-	"es2015",
-	"src/main/resources"
-	]
-
-	if (project.hasProperty( 'watch' )) {
-		args = ['-w'] + args
-	}
-
-	inputs.dir 'src/main/resources'
-	outputs.dir "$buildDir/resources/main"
+task transpile(type: NpmTask, dependsOn: 'npmInstall') {
+  group = 'build'
+  description = 'Execute transpile for production.'
+  args = ['run', 'transpile']
 }
 
-jar.dependsOn += babelJs
+processResources.dependsOn(':transpile')
