@@ -12,7 +12,8 @@ app {
 }
 
 node {
-	version = '4.2.1'
+	version = '6.11.4'
+	npmVersion = '5.5.1'
 	download = true
 }
 
