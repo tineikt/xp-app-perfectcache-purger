@@ -7,6 +7,7 @@ import {logEvent, handleDeletedEvent, handlePushedEvent } from './events';
 log.info('Add event listeners for Varnish Purging');
 eventLib.listener({
 	type: 'node.*',
+	localOnly: true,
 	callback: (event) => {
 		const eventNodes = getObjectValue(event, 'data', 'nodes') || [];
 		eventNodes
