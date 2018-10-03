@@ -1,5 +1,5 @@
 {
-  "name": "xp-app-pck",
+  "name": "xp-app-perfectcache-purger",
   "version": "1.0.0",
   "scripts": {
     "transpile": "babel ./src/main/resources -x \".es6\" --out-dir ./src/main/resources"
