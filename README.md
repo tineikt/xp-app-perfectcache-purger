@@ -24,6 +24,9 @@ sub vcl_recv {
 }
 ```
 
+You also have to handle setting the xkey header on your response with the keys with proper prefix.
+We strongly suggest you use the [perfectcache-lib](https://github.com/tineikt/xp-lib-perfectcache) to assist you and keep consistent with `con-`, `cat-` and `tag-` prefix.
+
 ### optional
 Use the [re vmod](https://code.uplex.de/uplex-varnish/libvmod-re) to add xkeys to images and other content that isn't passed through any XP controller/responsefilters.
 
@@ -49,3 +52,30 @@ varnish.url = http://localhost:80
 ```
 
 When config is in place... checkout and use gradle to build and deploy.
+
+## What, why and how is things purged?
+
+The XP app backend is responsible for returning a xkey header telling Varnish about dependencies on that specific page.
+There are three types of prefix on the xkey's that affects how purging will be done:
+
+`con-${guid}`, dependent on a content.
+
+`cat-${guid}`, dependent on a category
+
+`tag-${guid}`, dependent on a tag
+
+When a `node.published` or `node.deleted` is sent from **Content Studio** this app will send purge requests based on the following logic.
+
+### node.published ###
+The following keys will be purged
+`con-${publishedNodeId} cat-${publishedNodeId}`
+
+...also attempt to purge the parent with:
+`con-${publishedNodeParentId}`
+
+...and look if the content have one or several tags in the structure used at *TINE SA* using x-data. It will look for IDs at `content.x.appName.tags.conTag` and if it is tagged also purge these with:
+`tag-${publishedNodeTagsId}`
+
+### node.deleted ###
+The following keys will be purged
+`con-${publishedNodeId} cat-${publishedNodeId} tag-${publishedNodeId}`
