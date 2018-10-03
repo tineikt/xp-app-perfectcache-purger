@@ -1,6 +1,7 @@
 import contentLib from '/lib/xp/content';
 
 const httpClient = require('/lib/http-client');
+const urlToVarnish = app.config['varnish.url'] || 'http://qaweb10002.tine.no';
 
 export function handlePushedEvent(eventNode) {
 	let xkey = `con-${eventNode.id} cat-${eventNode.id}`;
@@ -58,8 +59,9 @@ function getTagsFromContent(eventNode) {
 }
 
 function purge(xkey) {
+	log.info(urlToVarnish);
 	const response = httpClient.request({
-		url: 'http://qaweb10002.tine.no',
+		url: urlToVarnish,
 		method: 'PURGE',
 		headers: {
 			xkey
