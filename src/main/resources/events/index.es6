@@ -59,7 +59,6 @@ function getTagsFromContent(eventNode) {
 }
 
 function purge(xkey) {
-	log.info(urlToVarnish);
 	const response = httpClient.request({
 		url: urlToVarnish,
 		method: 'PURGE',
