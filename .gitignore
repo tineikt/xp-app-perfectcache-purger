@@ -1,7 +1,9 @@
 .DS_Store
 /node_modules
-.gradle
+.gradle/
 /build
+.xp/
 
 # Ignore build output
+/src/main/resources/**/*.js
 /src/main/resources/lib/tineikt/**/*.js
