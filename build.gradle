@@ -7,7 +7,7 @@ app {
 	name = project.ext.appName
 	displayName = project.ext.displayName
 	vendorName = 'TINE SA'
-	vendorUrl = 'https://www.tine.no'
+	vendorUrl = 'https://www.tine.no/'
 	systemVersion = project.ext.xpVersion
 }
 
