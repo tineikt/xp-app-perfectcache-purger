@@ -7,15 +7,11 @@ import {logEvent, handleDeletedEvent, handlePushedEvent } from './events';
 log.info('Add event listeners for Varnish Purging');
 eventLib.listener({
 	type: 'node.*',
-	localOnly: true,
 	callback: (event) => {
-		log.info('localOrigin %s', event.localOrigin);
-		if (event.localOrigin) {
-			const eventNodes = getObjectValue(event, 'data', 'nodes') || [];
-			eventNodes
-				.filter(eventNode => isPublished(eventNode))
-				.forEach(eventNode => handle(event, eventNode));
-		}
+		const eventNodes = getObjectValue(event, 'data', 'nodes') || [];
+		eventNodes
+			.filter(eventNode => isPublished(eventNode))
+			.forEach(eventNode => handle(event, eventNode));
 	}
 });
 
