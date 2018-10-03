@@ -4,11 +4,11 @@ plugins {
 }
 
 app {
-	name = project.appName
-	displayName = project.displayName
+	name = project.ext.appName
+	displayName = project.ext.displayName
 	vendorName = 'TINE SA'
 	vendorUrl = 'https://www.tine.no'
-	systemVersion = xpVersion
+	systemVersion = project.ext.xpVersion
 }
 
 ext {
@@ -25,12 +25,10 @@ node {
 dependencies {
 	compile "com.enonic.xp:core-api:${xpVersion}"
 	compile "com.enonic.xp:portal-api:${xpVersion}"
-	include "com.enonic.xp:lib-portal:${xpVersion}"
 	include "com.enonic.xp:lib-content:${xpVersion}"
 	include "com.enonic.xp:lib-event:${xpVersion}"
 	include "com.enonic.xp:lib-context:${xpVersion}"
-	include "com.enonic.xp:lib-node:${xpVersion}"
-	include 'com.enonic.lib:lib-http-client:1.0.1'
+	include 'com.enonic.lib:lib-http-client:1.0.2'
 }
 
 repositories {

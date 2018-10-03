@@ -1,0 +1,3 @@
+<application>
+  <description>Listen for publish events and sends purge to Varnish</description>
+</application>
