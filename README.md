@@ -25,7 +25,7 @@ sub vcl_recv {
 ```
 
 You also have to handle setting the xkey header on your response with the keys with proper prefix.
-We strongly suggest you use the [perfectcache-lib](https://github.com/tineikt/xp-lib-perfectcache) to assist you and keep consistent with `con-`, `cat-` and `tag-` prefix.
+We strongly suggest you use the [perfectcacheheaders-lib](https://github.com/tineikt/xp-lib-perfectcache-headers) to assist you and keep consistent with `con-`, `cat-` and `tag-` prefix.
 
 ### optional
 Use the [re vmod](https://code.uplex.de/uplex-varnish/libvmod-re) to add xkeys to images and other content that isn't passed through any XP controller/responsefilters.
