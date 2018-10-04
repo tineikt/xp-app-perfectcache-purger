@@ -67,8 +67,8 @@ function purge(xkey) {
 				headers: {
 					xkey
 				},
-				connectionTimeout: 1000,
-				readTimeout: 2000
+				connectionTimeout: 10000,
+				readTimeout: 5000
 			});
 			log.info('Varnish Purge Respone: %s', response.message);
 		} catch (e) {
