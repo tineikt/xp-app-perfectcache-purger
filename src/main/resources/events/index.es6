@@ -70,7 +70,7 @@ function purge(xkey) {
 				connectionTimeout: 10000,
 				readTimeout: 5000
 			});
-			log.info('Varnish Purge Respone: %s', response.message);
+			log.info(`Varnish Purge Respone from ${urlToVarnish[i]}: %s`, response.message);
 		} catch (e) {
 			log.error(`Varnish Purge Request Failed: %s`, e)
 		}
