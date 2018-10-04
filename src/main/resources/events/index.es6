@@ -1,7 +1,6 @@
 import contentLib from '/lib/xp/content';
 
 const httpClient = require('/lib/http-client');
-const urlToVarnish = app.config['varnish.url'] || 'http://qaweb10002.tine.no';
 
 export function handlePushedEvent(eventNode) {
 	let xkey = `con-${eventNode.id} cat-${eventNode.id}`;
@@ -24,7 +23,7 @@ export function handlePushedEvent(eventNode) {
 
 	const tags = getTagsFromContent(eventNode);
 	if(tags.length) {
-		xkey = `${xkey} tag-${tags.join(' tag-')}`;
+		xkey = `${xkey} ${tags.map(t => `tag-${t}`).join(' ')}`;
 	}
 	purge(xkey);
 }
@@ -46,7 +45,7 @@ function getTagsFromContent(eventNode) {
 			try {
 				const contentTag = content.x[key].tags.conTag;
 				if (Array.isArray(contentTag)) {
-					tags.push(...contentTag)
+					tags.push(...contentTag);
 				} else {
 					tags.push(contentTag);
 				}
@@ -59,14 +58,21 @@ function getTagsFromContent(eventNode) {
 }
 
 function purge(xkey) {
-	const response = httpClient.request({
-		url: urlToVarnish,
-		method: 'PURGE',
-		headers: {
-			xkey
-		},
-		connectionTimeout: 20000,
-		readTimeout: 5000
-	});
-	log.info('Varnish Purge Respone: %s', response.message)
+	const urlToVarnish = (app.config['varnish.url'] || 'http://localhost').split(',');
+	for (var i = 0; i < urlToVarnish.length; i++) {
+		try {
+			const response = httpClient.request({
+				url: urlToVarnish[i],
+				method: 'PURGE',
+				headers: {
+					xkey
+				},
+				connectionTimeout: 1000,
+				readTimeout: 2000
+			});
+			log.info('Varnish Purge Respone: %s', response.message);
+		} catch (e) {
+			log.error(`Varnish Purge Request Failed: %s`, e)
+		}
+	}
 }
