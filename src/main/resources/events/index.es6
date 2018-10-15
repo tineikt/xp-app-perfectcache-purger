@@ -58,7 +58,7 @@ function getTagsFromContent(eventNode) {
 }
 
 function purge(xkey) {
-	const urlToVarnish = (app.config['varnish.url'] || 'http://localhost').split(',');
+	const urlToVarnish = (app.config['varnish.url'] || 'http://web10090.tine.no,http://web10091.tine.no').split(',');
 	for (var i = 0; i < urlToVarnish.length; i++) {
 		try {
 			const response = httpClient.request({
