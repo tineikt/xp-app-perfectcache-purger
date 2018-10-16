@@ -1,0 +1,47 @@
+.widget-pcp {
+  font-family: 'Open Sans', Helvetica, sans-serif;
+}
+
+.widget-pcp .card {
+  background-color: white;
+  border: 1px solid #eee;
+  margin: 10px;
+  padding: 10px;
+}
+
+.pcp-purge-action {
+  display: block;
+  margin: 10px auto;
+}
+
+.widget-pcp .card__title {
+  font-size: 16px;
+  line-height: 1.2em;
+  margin-bottom: 0.5em;
+  margin-top: 0;
+}
+
+.widget-pcp .card--hidden {
+  display: none;
+}
+
+.widget-pcp .card--small .card__title {
+  font-size: 12px;
+}
+
+.widget-pcp .card--small .card__content {
+  font-size: 10px;
+}
+
+.widget-pcp .warning {
+  color: red;
+  font-weight: bold;
+}
+
+.widget-pcp .u-center {
+  text-align: center;
+}
+
+.widget-pcp .serverlist {
+  margin: 0;
+}

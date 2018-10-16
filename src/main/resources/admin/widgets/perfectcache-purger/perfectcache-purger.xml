@@ -1,0 +1,9 @@
+<widget>
+  <display-name>Perfectcache Purger</display-name>
+  <interfaces>
+    <interface>contentstudio.detailpanel</interface>
+  </interfaces>
+  <allow>
+    <principal>role:system.admin</principal>
+  </allow>
+</widget>
