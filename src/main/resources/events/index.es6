@@ -1,5 +1,4 @@
 import contentLib from '/lib/xp/content';
-
 const httpClient = require('/lib/http-client');
 
 export function handlePushedEvent(eventNode) {
@@ -57,7 +56,8 @@ function getTagsFromContent(eventNode) {
 	return tags;
 }
 
-function purge(xkey) {
+export function purge(xkey) {
+	let responses = [];
 	const urlToVarnish = (app.config['varnish.url'] || 'http://web10090.tine.no,http://web10091.tine.no').split(',');
 	for (var i = 0; i < urlToVarnish.length; i++) {
 		try {
@@ -71,8 +71,33 @@ function purge(xkey) {
 				readTimeout: 5000
 			});
 			log.info(`Varnish Purge Respone from ${urlToVarnish[i]}: %s`, response.message);
+			responses.push({ server: urlToVarnish[i], message: response.message });
 		} catch (e) {
 			log.error(`Varnish Purge Request Failed: %s`, e)
 		}
 	}
+	return responses;
+}
+
+export function ban(path) {
+	let responses = [];
+	const urlToVarnish = (app.config['varnish.url'] || 'http://web10090.tine.no,http://web10091.tine.no').split(',');
+	for (var i = 0; i < urlToVarnish.length; i++) {
+		try {
+			const response = httpClient.request({
+				url: urlToVarnish[i],
+				method: 'BAN',
+				headers: {
+					'xp-content-path': path
+				},
+				connectionTimeout: 10000,
+				readTimeout: 5000
+			});
+			log.info(`Varnish Ban Respone from ${urlToVarnish[i]}: %s`, response.message);
+			responses.push({ server: urlToVarnish[i], message: response.message });
+		} catch (e) {
+			log.error(`Varnish Ban Request Failed: %s`, e)
+		}
+	}
+	return responses;
 }

@@ -28,13 +28,19 @@ dependencies {
 	include "com.enonic.xp:lib-content:${xpVersion}"
 	include "com.enonic.xp:lib-event:${xpVersion}"
 	include "com.enonic.xp:lib-context:${xpVersion}"
+	include "com.enonic.xp:lib-admin:${xpVersion}"
 	include 'com.enonic.lib:lib-http-client:1.0.2'
+	include "com.github.tineikt:xp-lib-freemarker:1.1.6"
 }
 
 repositories {
 	mavenLocal()
-	mavenCentral()
-	maven { url 'http://repo.enonic.com/public' }
+	jcenter()
+	xp.enonicRepo()
+
+	maven {
+		url 'https://jitpack.io'
+	}
 }
 
 task transpile(type: NpmTask, dependsOn: 'npmInstall') {
