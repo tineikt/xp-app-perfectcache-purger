@@ -1,7 +1,7 @@
 import eventLib from '/lib/xp/event';
 import contextLib from '/lib/xp/context';
 
-import {logEvent, handleDeletedEvent, handlePushedEvent } from './events';
+import {logEvent, handleDeletedEvent, handlePushedEvent, handleApplicationEvent } from './events';
 
 eventLib.listener({
 	type: 'node.*',
@@ -11,6 +11,14 @@ eventLib.listener({
 		eventNodes
 			.filter(eventNode => isPublished(eventNode))
 			.forEach(eventNode => handle(event, eventNode));
+	}
+});
+
+eventLib.listener({
+	type: 'application',
+	localOnly: true,
+	callback: (event) => {
+		handleApplicationEvent(event.data);
 	}
 });
 
