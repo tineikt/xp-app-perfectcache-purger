@@ -13,6 +13,7 @@ acl purge {
 		"1.3.3.7"; 
 }
 
+# Support PURGE and BAN requests
 sub vcl_recv {
 	if (req.method == "PURGE") {
 		if (client.ip !~ purge) {
@@ -20,11 +21,25 @@ sub vcl_recv {
 		}
 		set req.http.n-gone = xkey.purge(req.http.xkey);
 		return (synth(200, "Invalidated " + req.http.n-gone + " objects"));
+		
+	} else if (req.method == "BAN") {
+		if (client.ip !~ purge) {
+			return(synth(403, "Client IP" + client.ip + " not in PURGE list"));
+		}
+		ban("obj.http.xp-content-path ~ " + req.http.xp-content-path);
+		return(synth(200, "Ban added for " + req.http.xp-content-path));
+		
 	}
+}
+
+# Remove xp-content-path and xkey headers in the response from Varnish
+sub vcl_deliver {
+	unset resp.http.xkey;
+	unset resp.http.xp-content-path;
 }
 ```
 
-You also have to handle setting the xkey header on your response with the keys with proper prefix.
+You also have to handle setting the `xp-content-path` and `xkey` header on your response with the keys with proper prefix.
 We strongly suggest you use the [perfectcacheheaders-lib](https://github.com/tineikt/xp-lib-perfectcache-headers) to assist you and keep consistent with `con-`, `cat-` and `tag-` prefix.
 
 ### optional
@@ -40,7 +55,6 @@ sub vcl_backend_response {
 }
 ```
 This partial config will add xkey in the format `con-83397779-e7ab-42a5-a50f-44f18e31da68` for an image served by Enonic XP that have the id `83397779-e7ab-42a5-a50f-44f18e31da68`.
-
 
 ## Installation
 
@@ -79,3 +93,10 @@ The following keys will be purged
 ### node.deleted ###
 The following keys will be purged
 `con-${publishedNodeId} cat-${publishedNodeId} tag-${publishedNodeId}`
+
+## Banning on application installation
+When a application is installed, the purger will find sites that use that application and send a ban request for those paths.
+This is dependent on the `xp-content-path` header to be set from the controller.
+
+## Admin widget
+This application also provides an Admin Widget that gives the user an option to manually purge a single content or create a ban.
