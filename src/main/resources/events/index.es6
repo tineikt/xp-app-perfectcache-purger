@@ -36,6 +36,21 @@ export function logEvent(eventNode) {
 	log.info('event: %s', eventNode);
 }
 
+export function handleApplicationEvent(eventData) {
+	if (eventData.eventType === 'INSTALLED') {
+		const sitesThatUseApplication = contentLib.query({
+			count: 1000,
+			query: `data.siteConfig.applicationkey LIKE "${eventData.applicationKey}"`,
+			branch: 'master',
+			contentTypes: ['portal:site']
+		}).hits;
+
+		for (var i = 0; i < sitesThatUseApplication.length; i++) {
+			ban(`${sitesThatUseApplication[i]._path}(.*)`);
+		}
+	}
+}
+
 function getTagsFromContent(eventNode) {
 	const content = contentLib.get({ key: eventNode.id });
 	const tags = [];
