@@ -46,7 +46,7 @@ export function handleApplicationEvent(eventData) {
 		}).hits;
 
 		for (var i = 0; i < sitesThatUseApplication.length; i++) {
-			ban(`${sitesThatUseApplication[i]._path}(.*)`);
+			ban(`encodeURI(${sitesThatUseApplication[i]._path)}(.*)`);
 		}
 	}
 }

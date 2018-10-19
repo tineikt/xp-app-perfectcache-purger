@@ -27,7 +27,7 @@ exports.get = function (req) {
 			case 'BAN':
 				const path = contentLib.get({ key: contentId })._path;
 				if (path) {
-					const banResponse = ban(`${path}(.*)`);
+					const banResponse = ban(`${encodeURI(path)}(.*)`);
 					status = prettifyPurgeResponse(banResponse);
 				}
 				break;
