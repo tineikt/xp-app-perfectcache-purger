@@ -1,53 +1,104 @@
 plugins {
-	id 'com.enonic.xp.app' version '1.0.17'
-	id 'com.moowork.node' version '1.2.0'
+	id "com.github.node-gradle.node" version "7.0.0"
+	id "com.enonic.xp.app" version "3.2.0"
 }
 
 app {
-	name = project.ext.appName
-	displayName = project.ext.displayName
-	vendorName = 'TINE SA'
-	vendorUrl = 'https://www.tine.no/'
-	systemVersion = project.ext.xpVersion
+	name = "${appName}"
+	displayName = "${appDisplayName}"
+	vendorName = "${vendorName}"
+	vendorUrl = "${vendorUrl}"
+	systemVersion = "${xpVersion}"
 }
 
 ext {
-  nodeVersion = "8.11.1"
-  npmVer = "5.7.1"
+	nodeVer = "18.12.0"
+	npmVer = "8.19.2"
 }
 
 node {
-	version = nodeVersion
+	version = nodeVer
 	npmVersion = npmVer
 	download = true
 }
 
 dependencies {
-	compile "com.enonic.xp:core-api:${xpVersion}"
-	compile "com.enonic.xp:portal-api:${xpVersion}"
+	implementation "com.enonic.xp:core-api:${xpVersion}"
+	implementation "com.enonic.xp:portal-api:${xpVersion}"
 	include "com.enonic.xp:lib-content:${xpVersion}"
 	include "com.enonic.xp:lib-event:${xpVersion}"
 	include "com.enonic.xp:lib-context:${xpVersion}"
 	include "com.enonic.xp:lib-admin:${xpVersion}"
-	include 'com.enonic.lib:lib-http-client:1.0.2'
-	include "com.github.tineikt:xp-lib-freemarker:1.1.6"
+	include 'com.enonic.lib:lib-http-client:3.2.2'
+
+	// TINE libs
+	include 'no.tine.xp:xp-lib-freemarker:2.0.1'
+}
+
+def readSettings(repoName) {
+	println "Looking for settings for repo " + repoName
+
+	def userHome = System.getProperty("user.home")
+	def mavenSettingsFile = new File(userHome, ".m2/settings.xml")
+
+	def settings = new XmlSlurper().parse(mavenSettingsFile)
+	def matchingSettings = settings.servers.server.find{ it.id.text() == repoName }
+
+	return [ username: matchingSettings.username, password: matchingSettings.password ];
 }
 
 repositories {
 	mavenLocal()
-	jcenter()
+	mavenCentral()
 	xp.enonicRepo()
 
 	maven {
 		url 'https://jitpack.io'
 	}
+
+	maven {
+		url "https://pkgs.dev.azure.com/tine-sa/_packaging/digitale-flater/maven/v1"
+		name "digitale-flater"
+		authentication {
+			basic(BasicAuthentication)
+		}
+		def azureCredentials = readSettings(name)
+		credentials {
+			username = azureCredentials?.username
+			password = azureCredentials?.password
+		}
+	}
 }
 
-task transpile(type: NpmTask, dependsOn: 'npmInstall') {
-  group = 'build'
-  description = 'Execute transpile for production.'
-  args = ['run', 'transpile']
+clean.doFirst {
+	delete buildDir
+	description = "Prevent accumulation of old files"
+	println "Deleted local build folder"
 }
 
-processResources.dependsOn(':transpile')
-version = project.version
+npmInstall { // add additional args to existing task
+	description = 'Enables devDependencies to be installed in production'
+	args = ['--include=dev']
+}
+
+task transpile(type: NpmTask, dependsOn: [clean, npmInstall, processResources]) {
+	group = 'build'
+	description = 'Execute transpile for production.'
+	args = ['run', 'transpile']
+}
+
+processResources {
+	include '**/*'
+	exclude '**/.gitkeep'
+	exclude '**/*.es'
+	exclude '**/*.es6'
+	exclude 'assets/styles/**/*.less'
+	exclude 'assets/styles/**/*.sass'
+	exclude 'assets/styles/**/*.scss'
+	includeEmptyDirs false
+}
+
+jar {
+	dependsOn += transpile
+	version = project.version
+}
