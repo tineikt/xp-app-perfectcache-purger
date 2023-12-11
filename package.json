@@ -2,7 +2,7 @@
   "name": "xp-app-perfectcache-purger",
   "version": "1.0.0",
   "scripts": {
-    "transpile": "babel ./src/main/resources -x \".es6\" --out-dir ./src/main/resources"
+    "transpile": "babel ./src/main/resources -x \".es6\" --out-dir ./build/resources/main"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
