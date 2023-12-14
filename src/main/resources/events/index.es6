@@ -1,5 +1,5 @@
-import contentLib from '/lib/xp/content';
-const httpClient = require('/lib/http-client');
+import * as contentLib from '/lib/xp/content';
+import httpClient from '/lib/http-client';
 
 export function handlePushedEvent(eventNode) {
 	let xkey = `con-${eventNode.id} cat-${eventNode.id}`;
@@ -46,7 +46,7 @@ export function handleApplicationEvent(eventData) {
 		}).hits;
 
 		for (var i = 0; i < sitesThatUseApplication.length; i++) {
-			ban(`encodeURI(${sitesThatUseApplication[i]._path)}(.*)`);
+			ban(`encodeURI(${sitesThatUseApplication[i]._path})(.*)`);
 		}
 	}
 }
