@@ -1,5 +1,5 @@
-import eventLib from '/lib/xp/event';
-import contextLib from '/lib/xp/context';
+import * as eventLib from '/lib/xp/event';
+import * as contextLib from '/lib/xp/context';
 
 import {logEvent, handleDeletedEvent, handlePushedEvent, handleApplicationEvent } from './events';
 
