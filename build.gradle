@@ -52,3 +52,4 @@ task transpile(type: NpmTask, dependsOn: 'npmInstall') {
 
 processResources.dependsOn(':transpile')
 version = project.version
+jar.archiveName = "${projectName}.jar"
