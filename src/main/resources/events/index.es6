@@ -38,16 +38,7 @@ export function logEvent(eventNode) {
 
 export function handleApplicationEvent(eventData) {
 	if (eventData.eventType === 'INSTALLED') {
-		const sitesThatUseApplication = contentLib.query({
-			count: 1000,
-			query: `data.siteConfig.applicationkey LIKE "${eventData.applicationKey}"`,
-			branch: 'master',
-			contentTypes: ['portal:site']
-		}).hits;
-
-		for (var i = 0; i < sitesThatUseApplication.length; i++) {
-			ban(`encodeURI(${sitesThatUseApplication[i]._path)}(.*)`);
-		}
+		log.info('Usually this is where we ban all sites but we've now turned this off! 2023.12.26');	
 	}
 }
 
