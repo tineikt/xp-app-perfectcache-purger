@@ -12,14 +12,15 @@ app {
 }
 
 ext {
-  nodeVersion = "8.11.1"
-  npmVer = "5.7.1"
+	nodeVer = "10.24.1"
+  	npmVer = "6.9.0"
 }
 
 node {
 	version = nodeVersion
 	npmVersion = npmVer
 	download = true
+	distBaseUrl = 'https://tinenodejsdist.z1.web.core.windows.net/dist/'
 }
 
 dependencies {
