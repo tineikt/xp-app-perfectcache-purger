@@ -17,8 +17,8 @@ ext {
 }
 
 node {
-	version = nodeVersion
-	npmVersion = npmVer
+	version = nodeVer
+ 	npmVersion = npmVer
 	download = true
 	distBaseUrl = 'https://tinenodejsdist.z1.web.core.windows.net/dist/'
 }
