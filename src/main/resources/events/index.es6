@@ -38,7 +38,7 @@ export function logEvent(eventNode) {
 
 export function handleApplicationEvent(eventData) {
 	if (eventData.eventType === 'INSTALLED') {
-		log.info('Usually this is where we ban all sites but we've now turned this off! 2023.12.26');	
+		log.info('Usually this is where we ban all sites but we have now turned this off! 2023.12.26');	
 	}
 }
 
