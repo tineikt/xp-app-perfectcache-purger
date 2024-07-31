@@ -64,7 +64,7 @@ function getTagsFromContent(eventNode) {
 
 export function purge(xkey) {
 	let responses = [];
-	const urlToVarnish = (app.config['varnish.url'] || 'http://web10090.tine.no,http://web10091.tine.no').split(',');
+	const urlToVarnish = (app.config['varnish.url'] || '').split(',');
 	for (var i = 0; i < urlToVarnish.length; i++) {
 		try {
 			const response = httpClient.request({
@@ -87,7 +87,7 @@ export function purge(xkey) {
 
 export function ban(path) {
 	let responses = [];
-	const urlToVarnish = (app.config['varnish.url'] || 'http://web10090.tine.no,http://web10091.tine.no').split(',');
+	const urlToVarnish = (app.config['varnish.url'] || '').split(',');
 	for (var i = 0; i < urlToVarnish.length; i++) {
 		try {
 			const response = httpClient.request({
