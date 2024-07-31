@@ -37,7 +37,7 @@ export function getObjectValue(obj, prop, ...props) {
 }
 
 function isPublished(node) {
-	return node.branch === 'master' && node.repo === node.repo.startsWith('com.enonic.cms');
+	return node.branch === 'master' && node.repo.startsWith('com.enonic.cms');
 }
 
 function handle(event, eventNode) {
