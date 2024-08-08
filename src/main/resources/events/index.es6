@@ -2,6 +2,8 @@ import * as contentLib from '/lib/xp/content';
 import httpClient from '/lib/http-client';
 
 export function handlePushedEvent(eventNode) {
+	logEvent(eventNode);
+
 	let xkey = `con-${eventNode.id} cat-${eventNode.id}`;
 
 	// Also purge parent content
@@ -33,7 +35,7 @@ export function handleDeletedEvent(eventNode) {
 }
 
 export function logEvent(eventNode) {
-	log.info('event: %s', eventNode);
+	log.info('LogEvent() event: %s', eventNode);
 }
 
 export function handleApplicationEvent(eventData) {
@@ -43,9 +45,11 @@ export function handleApplicationEvent(eventData) {
 }
 
 function getTagsFromContent(eventNode) {
+	log.info('Getting tags from content %s', JSON.stringify(eventNode));
 	const content = contentLib.get({ key: eventNode.id });
+
 	const tags = [];
-	if (content.x) {
+	if (content && content.x) {
 		Object.keys(content.x).forEach(function(key) {
 			try {
 				const contentTag = content.x[key].tags.conTag;
@@ -58,7 +62,12 @@ function getTagsFromContent(eventNode) {
 				// No tags on that app namespace
 			}
 		});
+	} else {
+		log.info('Content was not found!');
 	}
+
+	log.info('Tags found: %s', tags);
+
 	return tags;
 }
 
@@ -76,7 +85,7 @@ export function purge(xkey) {
 				connectionTimeout: 10000,
 				readTimeout: 5000
 			});
-			log.info(`Varnish Purge Respone from ${urlToVarnish[i]}: %s`, response.message);
+			log.info(`Varnish Purge Respone from ${urlToVarnish[i]} for xkey ${xkey} is  %s`, response.message);
 			responses.push({ server: urlToVarnish[i], message: response.message });
 		} catch (e) {
 			log.error(`Varnish Purge Request Failed: %s`, e)
@@ -99,7 +108,7 @@ export function ban(path) {
 				connectionTimeout: 10000,
 				readTimeout: 5000
 			});
-			log.info(`Varnish Ban Respone from ${urlToVarnish[i]}: %s`, response.message);
+			log.info(`Varnish Ban Respone from ${urlToVarnish[i]} for path ${path} is %s`, response.message);
 			responses.push({ server: urlToVarnish[i], message: response.message });
 		} catch (e) {
 			log.error(`Varnish Ban Request Failed: %s`, e)
